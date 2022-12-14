@@ -25,6 +25,18 @@ app.get("/get-from-db", (req, res) => {
   });
 });
 
+app.get("/write-to-db", (req, res) => {
+  client.query("INSERT INTO data VALUES (888)", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({
+        data: result.rows,
+      });
+    }
+  });
+});
+
 app.get("/math-test", (req, res) => {
   const limit = 10 * 10 ** 8;
 
