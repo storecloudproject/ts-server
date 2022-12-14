@@ -50,6 +50,14 @@ app.get("/math-test", (req, res) => {
   res.send({ value: result });
 });
 
+app.get("/simple-math", (req, res) => {
+  let a = 999;
+  let b = 888;
+  let c = 777;
+
+  res.send({ value: (a * b) / c });
+});
+
 app.get("/get-from-api", (req, res) => {
   fetch("https://httpbin.org/get")
     .then((res) => {
