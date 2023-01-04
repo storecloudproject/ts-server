@@ -13,10 +13,16 @@ INSERT INTO data(a) VALUES (999)
 
 edit your connection string (in app.js) to match your db name. ie. replace "jordan" with your db name. 
 
+compile the typescript to js
+
+```bash
+tsc app.ts
+```
+
 run the server:
 
 ```bash
-node index.js
+node app.js
 ```
 
 ## usage
