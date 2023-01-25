@@ -1,20 +1,23 @@
 import * as express from "express";
 import { Client } from "pg";
 
-var connectionString = "postgres://postgres:postgres@localhost:5432/jordan";
+var connectionString = "postgres://postgres:postgres@localhost:5432/store_api";
 const client = new Client({
   connectionString: connectionString,
 });
 client.connect();
 
 const app = express();
+app.use(express.json());
 
-app.get("/", (_req, res) => {
-  res.send("server is working...");
+// check server status
+app.get("/status", (_req, res) => {
+  res.send();
 });
 
-app.get("/get-from-db", (_req, res) => {
-  client.query("SELECT * FROM data", (err, result) => {
+// for testing purposes only
+app.get("/get-all", (_req, res) => {
+  client.query("SELECT * FROM values", (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -25,8 +28,8 @@ app.get("/get-from-db", (_req, res) => {
   });
 });
 
-app.get("/write-to-db", (_req, res) => {
-  client.query("INSERT INTO data VALUES (888)", (err, result) => {
+app.get("/circulating-supply-store", (_req, res) => {
+  client.query("SELECT * FROM values WHERE name = 'circulating supply store'", (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -37,31 +40,45 @@ app.get("/write-to-db", (_req, res) => {
   });
 });
 
-app.get("/math-test", (_req, res) => {
-  const limit: number = 10 * 10 ** 8;
-
-  let numerator: number = 0;
-  let denominator: number = 1;
-  let result: number = 0;
-
-  for (let i: number = 0; i < limit; i++) {
-    result += numerator++ / denominator++;
-  }
-  res.send({ value: result });
+app.get("/security-budget-max-percent", (_req, res) => {
+  client.query("SELECT * FROM values WHERE name = 'security budget max percent'", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({
+        data: result.rows,
+      });
+    }
+  });
 });
 
-app.get("/simple-math", (_req, res) => {
-  res.send({ value: (999 * 888) / 777 });
+app.get("/current-security-budget-max-number", (_req, res) => {
+  client.query("SELECT * FROM values WHERE name = 'security budget max number'", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({
+        data: result.rows,
+      });
+    }
+  });
 });
 
-app.get("/get-from-api", (_req, res) => {
-  fetch("https://httpbin.org/get")
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      res.send({ data: data });
-    });
+app.post("/set-security-budget", (req, res) => {
+  const sb = req.body.sb;
+  // upsert
+  client.query(
+    `INSERT INTO values(name, value) VALUES ('security budget', ${sb}) ON CONFLICT(name) DO UPDATE set value=EXCLUDED.value`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({
+          data: result.rows,
+        });
+      }
+    }
+  );
 });
 
 app.listen("3000");
