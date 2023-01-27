@@ -2,18 +2,18 @@ import * as express from "express";
 import { Client } from "pg";
 import axios from "axios";
 
-var connectionString = "postgres://postgres:postgres@localhost:5432/store_api";
+// var connectionString = "postgres://postgres:postgres@localhost:5432/store_api";
 // TO DO: set up .env and pull from there
-// const client = new Client({
-//   user: "store_user",
-//   password: "dbpass",
-//   host: "store-oracle-dev---vm",
-//   port: 5432,
-//   database: "store_api",
-// });
 const client = new Client({
-  connectionString: connectionString,
+  user: "store_user",
+  password: "dbpass",
+  host: "store-oracle-dev---vm",
+  port: 5432,
+  database: "store_api",
 });
+// const client = new Client({
+//   connectionString: connectionString,
+// });
 client.connect();
 
 const app = express();
