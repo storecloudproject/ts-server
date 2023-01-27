@@ -30,3 +30,39 @@ CREATE TABLE values(name text primary key not null, value double precision);
 tsc app.ts
 node app.js
 ```
+
+## server
+
+connect as postgres user
+
+```zsh
+sudo -i -u postgres
+psql
+```
+
+```psql
+# CREATE DATABASE store_api;
+# \c store_api;
+# CREATE TABLE values(name text primary key not null, value double precision);
+
+# CREATE USER store_user WITH PASSWORD 'dbpass';
+# GRANT ALL PRIVILEGES ON DATABASE store_api TO store_user;
+```
+
+```ts
+var connectionString = "postgres://store_user:dbpass@localhost:5432/store_api";
+```
+
+install nodejs...
+
+```zsh
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
+```
+
+firewall:
+
+```zsh
+ufw allow http
+ufw allow proto tcp from any to any port 80,443,3000
+ufw enable
+```
